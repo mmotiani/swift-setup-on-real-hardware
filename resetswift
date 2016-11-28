@@ -1,0 +1,63 @@
+#!/bin/bash
+
+set -e
+
+swift-init all kill
+# Remove the following line if you did not set up rsyslog for individual logging:
+sudo find /var/log/swift -type f -exec rm -f {} \;
+if cut -d' ' -f2 /proc/mounts | grep -q /mnt/sda1 ; then
+   sudo umount /mnt/sda1
+fi
+if cut -d' ' -f2 /proc/mounts | grep -q /mnt/sdb1 ; then
+   sudo umount /mnt/sdb1
+fi
+if cut -d' ' -f2 /proc/mounts | grep -q /mnt/sdc1 ; then
+   sudo umount /mnt/sdc1
+fi
+if cut -d' ' -f2 /proc/mounts | grep -q /mnt/sdd1 ; then
+   sudo umount /mnt/sdd1
+fi
+if cut -d' ' -f2 /proc/mounts | grep -q /mnt/sdd2 ; then
+   sudo umount /mnt/sdd2
+fi
+# If you are using a loopback device set SAIO_BLOCK_DEVICE to "/srv/swift-disk"
+#sudo mkfs.xfs -f ${SAIO_BLOCK_DEVICE:-/dev/sdb1}
+
+sudo mkfs.xfs -f /dev/sda1
+sudo mkfs.xfs -f /dev/sdb1
+sudo mkfs.xfs -f /dev/sdc1
+sudo mkfs.xfs -f /dev/sdd1
+sudo mkfs.xfs -f /dev/sdd2
+
+sudo mount /mnt/sda1
+sudo mount /mnt/sdb1
+sudo mount /mnt/sdc1
+sudo mount /mnt/sdd1
+sudo mount /mnt/sdd2
+
+sudo mkdir /mnt/sda1/1 /mnt/sdb1/2 /mnt/sdc1/3 /mnt/sdd1/4 /mnt/sdd2/5
+
+sudo chown ${USER}:${USER} /mnt/sda1/1
+sudo chown ${USER}:${USER} /mnt/sdb1/2
+sudo chown ${USER}:${USER} /mnt/sdc1/3
+sudo chown ${USER}:${USER} /mnt/sdd1/4
+sudo chown ${USER}:${USER} /mnt/sdd2/5
+
+mkdir -p /srv/1/node/sda1
+mkdir -p /srv/2/node/sdb1
+mkdir -p /srv/3/node/sdc1
+mkdir -p /srv/4/node/sdd1
+mkdir -p /srv/5/node/sdd2
+
+sudo mkdir -p /var/cache/swift /var/cache/swift2 /var/cache/swift3 /var/cache/swift4
+sudo chown ${USER}:${USER} /var/cache/swift*
+
+sudo rm -f /var/log/debug /var/log/messages /var/log/rsyncd.log /var/log/syslog
+find /var/cache/swift* -type f -name *.recon -exec rm -f {} \;
+if [ "`type -t systemctl`" == "file" ]; then
+   sudo systemctl restart rsyslog
+   sudo systemctl restart memcached
+else
+   sudo service rsyslog restart
+   sudo service memcached restart
+fi
