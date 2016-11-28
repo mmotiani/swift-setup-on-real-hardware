@@ -62,7 +62,7 @@
 	sudo cp $HOME/swift/doc/saio/rsyncd.conf /etc/
 	sudo sed -i "s/<your-user-name>/${USER}/" /etc/rsyncd.conf
 	sudo rm -rf /etc/rsyncd.conf
-	cp rsyncd.conf /etc/
+	cp /home/swift/rsyncd.conf /etc/
 	sudo sed -i "s/RSYNC_ENABLE=false/RSYNC_ENABLE=true" /etc/default/rsync
 	sudo service rsync restart
 	rsync rsync://pub@localhost/
@@ -99,9 +99,9 @@
 	sudo rm -rf /home/swift/bin/remakerings
 	sudo rm -rf /home/swift/bin/resetswift
 	sudo rm -rf /etc/swift/swift.conf
-	cp remakerings /home/swift/bin/
-	cp resetswift /home/swift/bin/
-	cp swift.conf /etc/swift/
+	cp /home/swift/remakerings /home/swift/bin/
+	cp /home/swift/resetswift /home/swift/bin/
+	cp /home/swift/swift.conf /etc/swift/
 	cp openrc /home/swift/
 	echo "export SWIFT_TEST_CONFIG_FILE=/etc/swift/test.conf" >> $HOME/.bashrc
 	echo "export PATH=${PATH}:$HOME/bin" >> $HOME/.bashrc
