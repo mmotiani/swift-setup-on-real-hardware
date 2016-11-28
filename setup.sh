@@ -13,6 +13,14 @@
 	sudo mkfs.xfs -f /dev/sdc1
 	sudo mkfs.xfs -f /dev/sdd1
 	sudo mkfs.xfs -f /dev/sdd2
+	cp /etc/fstab /etc/fstab.insert.bak
+	cat >> /etc/fstab << EOF
+	/dev/sda1 /mnt/sda1 xfs noatime,nodiratime,nobarrier,logbufs=8 0 0
+	/dev/sdb1 /mnt/sdb1 xfs noatime,nodiratime,nobarrier,logbufs=8 0 0
+	/dev/sdc1 /mnt/sdc1 xfs noatime,nodiratime,nobarrier,logbufs=8 0 0
+	/dev/sdd1 /mnt/sdd1 xfs noatime,nodiratime,nobarrier,logbufs=8 0 0
+	/dev/sdd2 /mnt/sdd2 xfs noatime,nodiratime,nobarrier,logbufs=8 0 0
+	EOF
 	sudo mkdir /mnt/sda1
 	sudo mkdir /mnt/sdb1
 	sudo mkdir /mnt/sdc1
